@@ -139,8 +139,11 @@ const userStore = useUserStore()
 const formRef = ref(null)
 const loading = ref(false)
 
-// 深色模式
-const darkMode = ref(localStorage.getItem('darkMode') === 'true')
+// 深色模式：优先从localStorage读取，否则根据当前页面状态判断
+const darkMode = ref(
+  localStorage.getItem('darkMode') === 'true' ||
+  (!localStorage.getItem('darkMode') && document.documentElement.classList.contains('dark'))
+)
 
 const handleDarkModeChange = (value) => {
   localStorage.setItem('darkMode', value.toString())
@@ -156,8 +159,14 @@ const handleDarkModeChange = (value) => {
 }
 
 onMounted(() => {
-  // 初始化深色模式状态
-  darkMode.value = localStorage.getItem('darkMode') === 'true'
+  // 初始化深色模式状态：优先从localStorage读取，如果没有则根据页面实际状态判断
+  const stored = localStorage.getItem('darkMode')
+  if (stored !== null) {
+    darkMode.value = stored === 'true'
+  } else {
+    // 如果localStorage没有值，根据当前页面是否有dark class来判断
+    darkMode.value = document.documentElement.classList.contains('dark')
+  }
 })
 
 const form = reactive({
