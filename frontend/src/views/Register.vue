@@ -112,20 +112,6 @@
             </el-col>
           </el-row>
 
-          <!-- 自动定位按钮 -->
-          <el-form-item>
-            <el-button
-              type="info"
-              plain
-              :icon="locating ? 'Loading' : 'Location'"
-              :loading="locating"
-              @click="handleAutoLocate"
-              size="large"
-              style="width: 100%"
-            >
-              {{ locating ? '定位中...' : '📍 自动定位我的城市' }}
-            </el-button>
-          </el-form-item>
 
           <el-form-item>
             <el-button
@@ -155,14 +141,12 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Location, Loading } from '@element-plus/icons-vue'
+import { Loading } from '@element-plus/icons-vue'
 import request from '../utils/request'
-import { getUserLocationByIP } from '../utils/location'
 
 const router = useRouter()
 const formRef = ref(null)
 const loading = ref(false)
-const locating = ref(false)
 
 // 省市数据
 const provinces = [
@@ -261,37 +245,6 @@ const handleProvinceChange = () => {
   form.city = ''
   const prov = provinces.find(p => p.name === form.province)
   cities.value = prov ? prov.cities : []
-}
-
-// 自动定位
-const handleAutoLocate = async () => {
-  locating.value = true
-  try {
-    const location = await getUserLocationByIP()
-    if (location && location.city) {
-      // 匹配省份和城市
-      for (const prov of provinces) {
-        for (const city of prov.cities) {
-          if (location.city.includes(city) || city.includes(location.city)) {
-            form.province = prov.name
-            cities.value = prov.cities
-            form.city = city
-            ElMessage.success(`定位成功：${prov.name} ${city}`)
-            return
-          }
-        }
-      }
-      // 如果没匹配到，使用原始城市名
-      form.city = location.city
-      ElMessage.success(`定位成功：${location.city}`)
-    } else {
-      ElMessage.warning('定位失败，请手动选择')
-    }
-  } catch (error) {
-    ElMessage.error('定位失败，请手动选择')
-  } finally {
-    locating.value = false
-  }
 }
 
 const handleRegister = async () => {
