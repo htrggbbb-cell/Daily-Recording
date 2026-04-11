@@ -8,8 +8,8 @@ const fs = require('fs');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
-const foodRoutes = require('./routes/food');
-const studyRoutes = require('./routes/study');
+const expenseRoutes = require('./routes/expense');
+const incomeRoutes = require('./routes/income');
 const userRoutes = require('./routes/user');
 
 const app = express();
@@ -92,8 +92,8 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/food', foodRoutes);
-app.use('/api/study', studyRoutes);
+app.use('/api/expense', expenseRoutes);
+app.use('/api/income', incomeRoutes);
 app.use('/api/user', userRoutes);
 
 // SPA fallback - Vue Router的history模式支持

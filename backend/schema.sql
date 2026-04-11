@@ -1,4 +1,4 @@
--- 饮食学习记录网站数据库表结构
+-- 消费收入记录网站数据库表结构
 -- 创建数据库
 CREATE DATABASE IF NOT EXISTS daily_tracker DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE daily_tracker;
@@ -23,42 +23,38 @@ CREATE TABLE IF NOT EXISTS users (
   INDEX idx_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 饮食记录表
-CREATE TABLE IF NOT EXISTS food_records (
+-- 消费记录表
+CREATE TABLE IF NOT EXISTS expense_records (
   id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT NOT NULL,
-  meal_type ENUM('breakfast', 'lunch', 'dinner', 'snack') NOT NULL,
-  food_name VARCHAR(200) NOT NULL,
-  calories DECIMAL(10,2) DEFAULT 0,
-  protein DECIMAL(10,2) DEFAULT 0,
-  carbs DECIMAL(10,2) DEFAULT 0,
-  fat DECIMAL(10,2) DEFAULT 0,
-  record_date DATE NOT NULL,
-  notes TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  INDEX idx_user_date (user_id, record_date),
-  INDEX idx_date (record_date)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 学习记录表
-CREATE TABLE IF NOT EXISTS study_records (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  user_id INT NOT NULL,
-  subject VARCHAR(100) NOT NULL,
-  content TEXT NOT NULL,
-  study_hours DECIMAL(10,2) DEFAULT 0,
-  difficulty ENUM('easy', 'medium', 'hard') DEFAULT 'medium',
-  completion DECIMAL(5,2) DEFAULT 100,
-  record_date DATE NOT NULL,
-  notes TEXT,
+  category VARCHAR(50) NOT NULL COMMENT '消费类别：食品、日用品、居住、交通等',
+  item_name VARCHAR(200) NOT NULL COMMENT '物品名称',
+  amount DECIMAL(10,2) NOT NULL COMMENT '金额',
+  record_date DATE NOT NULL COMMENT '记录日期',
+  notes TEXT COMMENT '备注',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   INDEX idx_user_date (user_id, record_date),
   INDEX idx_date (record_date),
-  INDEX idx_subject (subject)
+  INDEX idx_category (category)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 收入记录表
+CREATE TABLE IF NOT EXISTS income_records (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  category VARCHAR(50) NOT NULL COMMENT '收入类别：工资、兼职、投资、礼金等',
+  item_name VARCHAR(200) NOT NULL COMMENT '收入来源',
+  amount DECIMAL(10,2) NOT NULL COMMENT '金额',
+  record_date DATE NOT NULL COMMENT '记录日期',
+  notes TEXT COMMENT '备注',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_user_date (user_id, record_date),
+  INDEX idx_date (record_date),
+  INDEX idx_category (category)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 插入测试数据（可选）

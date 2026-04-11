@@ -1,30 +1,27 @@
-const FoodRecord = require('../models/FoodRecord');
+const IncomeRecord = require('../models/IncomeRecord');
 
 const createRecord = async (req, res) => {
   try {
-    const { mealType, foodName, calories, protein, carbs, fat, recordDate, notes } = req.body;
+    const { category, itemName, amount, recordDate, notes } = req.body;
     const userId = req.userId;
 
-    if (!mealType || !foodName || !recordDate) {
-      return res.status(400).json({ error: '餐别、食物名称和日期是必需的' });
+    if (!category || !itemName || !amount || !recordDate) {
+      return res.status(400).json({ error: '类别、收入来源、金额和日期是必需的' });
     }
 
-    const id = await FoodRecord.create({
+    const id = await IncomeRecord.create({
       userId,
-      mealType,
-      foodName,
-      calories: calories || null,
-      protein: protein || null,
-      carbs: carbs || null,
-      fat: fat || null,
+      category,
+      itemName,
+      amount,
       recordDate,
       notes: notes || null
     });
 
-    const record = await FoodRecord.findById(id);
+    const record = await IncomeRecord.findById(id);
     res.status(201).json({ message: '记录添加成功', record });
   } catch (error) {
-    console.error('创建饮食记录错误:', error);
+    console.error('创建收入记录错误:', error);
     res.status(500).json({ error: '服务器错误' });
   }
 };
@@ -32,12 +29,10 @@ const createRecord = async (req, res) => {
 const getRecords = async (req, res) => {
   try {
     const userId = req.userId;
-    const records = await FoodRecord.findByUserId(userId);
-    console.log('获取饮食记录 - 用户ID:', userId, '记录数:', records.length);
-    console.log('饮食记录数据:', JSON.stringify(records, null, 2));
+    const records = await IncomeRecord.findByUserId(userId);
     res.json(records);
   } catch (error) {
-    console.error('获取饮食记录错误:', error);
+    console.error('获取收入记录错误:', error);
     res.status(500).json({ error: '服务器错误' });
   }
 };
@@ -45,7 +40,7 @@ const getRecords = async (req, res) => {
 const getRecord = async (req, res) => {
   try {
     const { id } = req.params;
-    const record = await FoodRecord.findById(id);
+    const record = await IncomeRecord.findById(id);
 
     if (!record) {
       return res.status(404).json({ error: '记录不存在' });
@@ -57,7 +52,7 @@ const getRecord = async (req, res) => {
 
     res.json(record);
   } catch (error) {
-    console.error('获取饮食记录错误:', error);
+    console.error('获取收入记录错误:', error);
     res.status(500).json({ error: '服务器错误' });
   }
 };
@@ -65,12 +60,9 @@ const getRecord = async (req, res) => {
 const updateRecord = async (req, res) => {
   try {
     const { id } = req.params;
-    const { mealType, foodName, calories, protein, carbs, fat, recordDate, notes } = req.body;
+    const { category, itemName, amount, recordDate, notes } = req.body;
 
-    console.log('更新饮食记录 - ID:', id);
-    console.log('更新数据:', { mealType, foodName, calories, protein, carbs, fat, recordDate, notes });
-
-    const record = await FoodRecord.findById(id);
+    const record = await IncomeRecord.findById(id);
     if (!record) {
       return res.status(404).json({ error: '记录不存在' });
     }
@@ -79,23 +71,19 @@ const updateRecord = async (req, res) => {
       return res.status(403).json({ error: '无权修改此记录' });
     }
 
-    await FoodRecord.update(id, {
-      mealType,
-      foodName,
-      calories: calories || null,
-      protein: protein || null,
-      carbs: carbs || null,
-      fat: fat || null,
+    await IncomeRecord.update(id, {
+      category,
+      itemName,
+      amount,
       recordDate,
       notes
     });
 
-    const updatedRecord = await FoodRecord.findById(id);
+    const updatedRecord = await IncomeRecord.findById(id);
     res.json({ message: '记录更新成功', record: updatedRecord });
   } catch (error) {
-    console.error('更新饮食记录错误:', error);
-    console.error('错误堆栈:', error.stack);
-    res.status(500).json({ error: '服务器错误', details: error.message });
+    console.error('更新收入记录错误:', error);
+    res.status(500).json({ error: '服务器错误' });
   }
 };
 
@@ -103,7 +91,7 @@ const deleteRecord = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const record = await FoodRecord.findById(id);
+    const record = await IncomeRecord.findById(id);
     if (!record) {
       return res.status(404).json({ error: '记录不存在' });
     }
@@ -112,10 +100,10 @@ const deleteRecord = async (req, res) => {
       return res.status(403).json({ error: '无权删除此记录' });
     }
 
-    await FoodRecord.delete(id);
+    await IncomeRecord.delete(id);
     res.json({ message: '记录删除成功' });
   } catch (error) {
-    console.error('删除饮食记录错误:', error);
+    console.error('删除收入记录错误:', error);
     res.status(500).json({ error: '服务器错误' });
   }
 };
@@ -129,7 +117,7 @@ const getStats = async (req, res) => {
       return res.status(400).json({ error: '开始日期和结束日期是必需的' });
     }
 
-    const stats = await FoodRecord.getStatsByDate(userId, startDate, endDate);
+    const stats = await IncomeRecord.getStatsByDate(userId, startDate, endDate);
     res.json(stats);
   } catch (error) {
     console.error('获取统计数据错误:', error);
@@ -137,4 +125,11 @@ const getStats = async (req, res) => {
   }
 };
 
-module.exports = { createRecord, getRecords, getRecord, updateRecord, deleteRecord, getStats };
+module.exports = {
+  createRecord,
+  getRecords,
+  getRecord,
+  updateRecord,
+  deleteRecord,
+  getStats
+};

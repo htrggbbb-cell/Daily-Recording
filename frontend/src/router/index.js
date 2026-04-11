@@ -16,28 +16,18 @@ const routes = [
     path: '/',
     name: 'Layout',
     component: () => import('../views/Layout.vue'),
-    redirect: '/food',
+    redirect: '/records',
     children: [
       {
-        path: 'food',
-        name: 'Food',
-        component: () => import('../views/Food.vue')
-      },
-      {
-        path: 'study',
-        name: 'Study',
-        component: () => import('../views/Study.vue')
+        path: 'records',
+        name: 'Records',
+        component: () => import('../views/Records.vue')
       },
       {
         path: 'profile',
         name: 'Profile',
         component: () => import('../views/Profile.vue')
       },
-      {
-        path: 'settings',
-        name: 'Settings',
-        component: () => import('../views/Settings.vue')
-      }
     ]
   }
 ]
@@ -49,7 +39,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
-  
+
   if (to.path !== '/login' && to.path !== '/register' && !userStore.isLogin) {
     next('/login')
   } else if ((to.path === '/login' || to.path === '/register') && userStore.isLogin) {

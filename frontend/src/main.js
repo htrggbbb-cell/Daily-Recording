@@ -1,15 +1,8 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import 'element-plus/theme-chalk/dark/css-vars.css'
 import './assets/styles/global.css'
 import App from './App.vue'
 import router from './router'
-
-// 初始化深色模式（在挂载前执行）
-const darkMode = localStorage.getItem('darkMode') === 'true'
-if (darkMode) {
-  document.documentElement.classList.add('dark')
-}
 
 const app = createApp(App)
 

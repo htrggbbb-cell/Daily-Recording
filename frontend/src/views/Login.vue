@@ -3,41 +3,22 @@
     <!-- 左侧品牌展示区 -->
     <div class="brand-section">
       <div class="brand-content">
-        <div class="brand-logo">🍊</div>
-        <h1 class="brand-title">每日记录</h1>
-        <p class="brand-slogan">记录每一餐，见证每一天</p>
+        <div class="brand-logo">💰</div>
+        <h1 class="brand-title">记账本</h1>
+        <p class="brand-slogan">记录每一笔收支，规划美好生活</p>
         <div class="brand-features">
           <div class="feature-item">
-            <span class="feature-icon">🍎</span>
-            <span>饮食追踪</span>
+            <span class="feature-icon">💸</span>
+            <span>消费记录</span>
           </div>
           <div class="feature-item">
-            <span class="feature-icon">📚</span>
-            <span>学习记录</span>
+            <span class="feature-icon">💰</span>
+            <span>收入管理</span>
           </div>
           <div class="feature-item">
-            <span class="feature-icon">📊</span>
-            <span>数据分析</span>
+            <span class="feature-icon">💡</span>
+            <span>智能建议</span>
           </div>
-        </div>
-
-        <!-- 深色模式开关 -->
-        <div class="dark-mode-toggle">
-          <div class="toggle-content">
-            <span class="toggle-icon">🌙</span>
-            <span class="toggle-text">深色模式</span>
-          </div>
-          <el-switch
-            v-model="darkMode"
-            @change="handleDarkModeChange"
-            size="large"
-            :active-icon="Moon"
-            :inactive-icon="Sunny"
-            inline-prompt
-            active-text="开"
-            inactive-text="关"
-            class="mode-switch"
-          />
         </div>
       </div>
       <div class="brand-decoration">
@@ -50,24 +31,9 @@
     <!-- 右侧表单区 -->
     <div class="form-section">
       <div class="form-container fade-in">
-        <!-- 移动端深色模式开关 -->
-        <div class="mobile-dark-mode-toggle">
-          <span class="toggle-label">🌙 深色模式</span>
-          <el-switch
-            v-model="darkMode"
-            @change="handleDarkModeChange"
-            size="large"
-            :active-icon="Moon"
-            :inactive-icon="Sunny"
-            inline-prompt
-            active-text="开"
-            inactive-text="关"
-          />
-        </div>
-
         <div class="form-header">
           <h2>欢迎回来 👋</h2>
-          <p>登录你的账户继续记录</p>
+          <p>登录你的账户继续记账</p>
         </div>
 
         <el-form :model="form" :rules="rules" ref="formRef" class="login-form">
@@ -132,42 +98,11 @@ import { ref, reactive, nextTick, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../store'
 import request from '../utils/request'
-import { Moon, Sunny } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const userStore = useUserStore()
 const formRef = ref(null)
 const loading = ref(false)
-
-// 深色模式：优先从localStorage读取，否则根据当前页面状态判断
-const darkMode = ref(
-  localStorage.getItem('darkMode') === 'true' ||
-  (!localStorage.getItem('darkMode') && document.documentElement.classList.contains('dark'))
-)
-
-const handleDarkModeChange = (value) => {
-  localStorage.setItem('darkMode', value.toString())
-  localStorage.setItem('darkModeAuto', 'false')  // 关闭自动模式
-
-  if (value) {
-    document.documentElement.classList.add('dark')
-    window.dispatchEvent(new CustomEvent('darkModeChange', { detail: true }))
-  } else {
-    document.documentElement.classList.remove('dark')
-    window.dispatchEvent(new CustomEvent('darkModeChange', { detail: false }))
-  }
-}
-
-onMounted(() => {
-  // 初始化深色模式状态：优先从localStorage读取，如果没有则根据页面实际状态判断
-  const stored = localStorage.getItem('darkMode')
-  if (stored !== null) {
-    darkMode.value = stored === 'true'
-  } else {
-    // 如果localStorage没有值，根据当前页面是否有dark class来判断
-    darkMode.value = document.documentElement.classList.contains('dark')
-  }
-})
 
 const form = reactive({
   username: '',
@@ -226,13 +161,13 @@ const handleLogin = async () => {
 .login-page {
   display: flex;
   min-height: 100vh;
-  background: var(--color-bg-page);
+  background: #f8f9fa;
 }
 
 /* 左侧品牌区 */
 .brand-section {
   flex: 1;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -279,7 +214,7 @@ const handleLogin = async () => {
   gap: 10px;
   background: rgba(255, 255, 255, 0.2);
   padding: 20px;
-  border-radius: var(--radius-card);
+  border-radius: 16px;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 }
@@ -291,55 +226,6 @@ const handleLogin = async () => {
 
 .feature-icon {
   font-size: 32px;
-}
-
-/* 深色模式开关 */
-.dark-mode-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.25);
-  padding: 16px 24px;
-  border-radius: var(--radius-card);
-  backdrop-filter: blur(10px);
-  margin-top: 30px;
-  transition: all 0.3s ease;
-}
-
-.dark-mode-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-.toggle-content {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.toggle-icon {
-  font-size: 24px;
-}
-
-.toggle-text {
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.mode-switch {
-  --el-switch-on-color: #FF8C42;
-  --el-switch-off-color: #E0E0E0;
-}
-
-.mode-switch :deep(.el-switch__core) {
-  height: 28px;
-  min-width: 56px;
-}
-
-.mode-switch :deep(.el-switch__action) {
-  height: 22px;
-  width: 22px;
 }
 
 /* 装饰圆圈 */
@@ -386,15 +272,15 @@ const handleLogin = async () => {
   align-items: center;
   justify-content: center;
   padding: 40px;
-  background: var(--color-bg-page);
+  background: #ffffff;
 }
 
 .form-container {
   width: 100%;
   max-width: 420px;
-  background: var(--color-bg-card);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card-hover);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   padding: 50px;
 }
 
@@ -405,12 +291,12 @@ const handleLogin = async () => {
 
 .form-header h2 {
   font-size: 28px;
-  color: var(--color-text-primary);
+  color: #333;
   margin-bottom: 8px;
 }
 
 .form-header p {
-  color: var(--color-text-secondary);
+  color: #666;
   font-size: 14px;
 }
 
@@ -424,6 +310,15 @@ const handleLogin = async () => {
 
 .login-form :deep(.el-input__wrapper) {
   padding: 12px 15px;
+  border-radius: 10px;
+}
+
+.login-form :deep(.el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #667eea;
+}
+
+.login-form :deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1px #667eea;
 }
 
 .login-button {
@@ -432,45 +327,33 @@ const handleLogin = async () => {
   font-size: 16px;
   font-weight: 600;
   margin-top: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 10px;
+}
+
+.login-button:hover {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
 }
 
 .form-footer {
   text-align: center;
-  color: var(--color-text-secondary);
+  color: #666;
   font-size: 14px;
 }
 
 .register-link {
-  color: var(--color-primary);
+  color: #667eea;
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
 .register-link:hover {
-  color: var(--color-primary-dark);
+  color: #764ba2;
   text-decoration: underline;
-}
-
-/* 移动端深色模式开关 */
-.mobile-dark-mode-toggle {
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  background: var(--color-bg-secondary);
-  border-radius: var(--radius-card);
-  margin-bottom: 24px;
-}
-
-.mobile-dark-mode-toggle .toggle-label {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.mobile-dark-mode-toggle .el-switch {
-  --el-switch-on-color: #FF8C42;
 }
 
 /* 响应式 */
@@ -481,11 +364,6 @@ const handleLogin = async () => {
 
   .form-section {
     flex: 1;
-  }
-
-  /* 移动端显示深色模式开关 */
-  .mobile-dark-mode-toggle {
-    display: flex;
   }
 }
 

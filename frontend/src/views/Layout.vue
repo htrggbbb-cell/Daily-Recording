@@ -4,17 +4,13 @@
       <el-header class="warm-header">
         <div class="header-content">
           <div class="logo">
-            <span class="logo-icon">🍊</span>
-            <span class="logo-text">每日记录</span>
+            <span class="logo-icon">💰</span>
+            <span class="logo-text">记账本</span>
           </div>
           <nav class="nav">
-            <router-link to="/food" class="nav-item">
-              <span class="nav-icon">🍎</span>
-              <span>饮食</span>
-            </router-link>
-            <router-link to="/study" class="nav-item">
-              <span class="nav-icon">📚</span>
-              <span>学习</span>
+            <router-link to="/records" class="nav-item">
+              <span class="nav-icon">💰</span>
+              <span>记账</span>
             </router-link>
           </nav>
           <div class="user-actions">
@@ -31,11 +27,7 @@
                 <el-dropdown-menu class="user-dropdown">
                   <el-dropdown-item command="profile">
                     <el-icon><User /></el-icon>
-                    个人信息
-                  </el-dropdown-item>
-                  <el-dropdown-item command="settings">
-                    <el-icon><Setting /></el-icon>
-                    系统设置
+                    基础信息
                   </el-dropdown-item>
                   <el-dropdown-item command="clearCache">
                     <el-icon><Refresh /></el-icon>
@@ -78,10 +70,7 @@ const userStore = useUserStore()
 const handleCommand = async (command) => {
   if (command === 'profile') {
     router.push('/profile')
-  } else if (command === 'settings') {
-    router.push('/settings')
   } else if (command === 'clearCache') {
-    // 不再清除localStorage，直接重新获取数据
     try {
       const userData = await request.get('/auth/user')
       userStore.setUser(userStore.token, userData)
@@ -91,16 +80,14 @@ const handleCommand = async (command) => {
       ElMessage.error('刷新失败，请重新登录')
     }
   } else if (command === 'logout') {
-    // 清除缓存和用户信息
     localStorage.clear()
     userStore.clearUser()
     ElMessage.success('已退出登录 👋')
     router.push('/login')
   } else if (command === 'deleteAccount') {
-    // 二次确认
     try {
       await ElMessageBox.confirm(
-        '注销账号将永久删除您的所有数据（包括饮食记录、学习记录等），此操作不可恢复！',
+        '注销账号将永久删除您的所有数据，此操作不可恢复！',
         '确认注销账号',
         {
           confirmButtonText: '确认注销',
@@ -109,7 +96,6 @@ const handleCommand = async (command) => {
           confirmButtonClass: 'el-button--danger'
         }
       )
-      // 再次确认
       await ElMessageBox.confirm(
         '您真的要注销账号吗？所有数据将永久丢失！',
         '最后确认',
@@ -120,7 +106,6 @@ const handleCommand = async (command) => {
           confirmButtonClass: 'el-button--danger'
         }
       )
-      // 执行注销
       await request.delete('/auth/account')
       localStorage.clear()
       userStore.clearUser()
@@ -139,18 +124,17 @@ const handleCommand = async (command) => {
 <style scoped>
 .layout {
   min-height: 100vh;
-  background: var(--color-bg-page);
+  background: #f8f9fa;
 }
 
-/* Header */
 .el-header.warm-header {
-  background: var(--color-bg-card);
-  box-shadow: var(--shadow-header);
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   padding: 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid var(--color-bg-secondary);
+  border-bottom: 1px solid #eee;
 }
 
 .header-content {
@@ -163,7 +147,6 @@ const handleCommand = async (command) => {
   margin: 0 auto;
 }
 
-/* Logo */
 .logo {
   display: flex;
   align-items: center;
@@ -179,13 +162,12 @@ const handleCommand = async (command) => {
 .logo-text {
   font-size: 22px;
   font-weight: 700;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Navigation */
 .nav {
   display: flex;
   gap: 8px;
@@ -196,8 +178,8 @@ const handleCommand = async (command) => {
   align-items: center;
   gap: 6px;
   padding: 10px 18px;
-  border-radius: var(--radius-button);
-  color: var(--color-text-secondary);
+  border-radius: 10px;
+  color: #666;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -208,13 +190,13 @@ const handleCommand = async (command) => {
 }
 
 .nav-item:hover {
-  color: var(--color-primary);
-  background: var(--color-bg-secondary);
+  color: #667eea;
+  background: #f0f0ff;
 }
 
 .nav-item.router-link-active {
-  color: var(--color-primary);
-  background: var(--color-bg-secondary);
+  color: #667eea;
+  background: #f0f0ff;
   font-weight: 600;
 }
 
@@ -226,11 +208,10 @@ const handleCommand = async (command) => {
   transform: translateX(-50%);
   width: 24px;
   height: 3px;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 2px;
 }
 
-/* User Actions */
 .user-actions {
   display: flex;
   align-items: center;
@@ -241,13 +222,13 @@ const handleCommand = async (command) => {
   align-items: center;
   gap: 10px;
   padding: 6px 12px;
-  border-radius: var(--radius-button);
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .user-trigger:hover {
-  background: var(--color-bg-secondary);
+  background: #f5f5f5;
 }
 
 .user-avatar {
@@ -255,11 +236,11 @@ const handleCommand = async (command) => {
   height: 36px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid var(--color-primary-light);
+  border: 2px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .user-avatar img {
@@ -276,13 +257,13 @@ const handleCommand = async (command) => {
 
 .username {
   font-size: 14px;
-  color: var(--color-text-primary);
+  color: #333;
   font-weight: 500;
 }
 
 .dropdown-icon {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: #999;
   transition: transform 0.3s ease;
 }
 
@@ -290,11 +271,10 @@ const handleCommand = async (command) => {
   transform: rotate(180deg);
 }
 
-/* Dropdown Menu */
 :deep(.user-dropdown) {
-  border-radius: var(--radius-button);
+  border-radius: 10px;
   border: none;
-  box-shadow: var(--shadow-card-hover);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
   padding: 8px;
 }
 
@@ -304,8 +284,8 @@ const handleCommand = async (command) => {
 }
 
 :deep(.user-dropdown .el-dropdown-menu__item:hover) {
-  background: var(--color-bg-secondary);
-  color: var(--color-primary);
+  background: #f0f0ff;
+  color: #667eea;
 }
 
 :deep(.user-dropdown .danger-item) {
@@ -321,7 +301,6 @@ const handleCommand = async (command) => {
   color: #f56c6c;
 }
 
-/* Main */
 .el-main.warm-main {
   max-width: 1400px;
   margin: 0 auto;
@@ -329,7 +308,6 @@ const handleCommand = async (command) => {
   width: 100%;
 }
 
-/* Page Transition */
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -345,7 +323,6 @@ const handleCommand = async (command) => {
   transform: translateY(-10px);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .header-content {
     padding: 0 16px;

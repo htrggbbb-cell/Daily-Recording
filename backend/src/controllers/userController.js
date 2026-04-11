@@ -1,26 +1,27 @@
-const FoodRecord = require('../models/FoodRecord');
-const StudyRecord = require('../models/StudyRecord');
+const ExpenseRecord = require('../models/ExpenseRecord');
+const IncomeRecord = require('../models/IncomeRecord');
 
 const getUserStats = async (req, res) => {
   try {
     const userId = req.userId;
     console.log('[getUserStats] 获取用户统计 - 用户ID:', userId);
 
-    // 获取饮食和学习统计
-    const foodStats = await FoodRecord.getUserStats(userId);
-    const studyStats = await StudyRecord.getUserStats(userId);
+    // 获取消费和收入统计
+    const expenseStats = await ExpenseRecord.getUserStats(userId);
+    const incomeStats = await IncomeRecord.getUserStats(userId);
 
-    console.log('[getUserStats] 饮食统计:', foodStats);
-    console.log('[getUserStats] 学习统计:', studyStats);
+    console.log('[getUserStats] 消费统计:', expenseStats);
+    console.log('[getUserStats] 收入统计:', incomeStats);
 
     // 合并统计数据
     const stats = {
-      recordDays: Math.max(foodStats.recordDays || 0, studyStats.recordDays || 0),
-      totalCalories: foodStats.totalCalories || 0,
-      totalHours: studyStats.totalHours || 0,
-      completedGoals: 0, // TODO: 实现目标功能后计算
-      foodRecords: foodStats.totalRecords || 0,
-      studyRecords: studyStats.totalRecords || 0
+      totalExpense: expenseStats.totalExpense || 0,
+      totalIncome: incomeStats.totalIncome || 0,
+      balance: (incomeStats.totalIncome || 0) - (expenseStats.totalExpense || 0),
+      expenseRecords: expenseStats.totalRecords || 0,
+      incomeRecords: incomeStats.totalRecords || 0,
+      expenseByCategory: expenseStats.categoryStats || [],
+      incomeByCategory: incomeStats.categoryStats || []
     };
 
     console.log('[getUserStats] 合并后的统计:', stats);

@@ -13,9 +13,9 @@ export default defineConfig({
       includeAssets: ['**/*.{js,css,html,svg,png}'],
       manifest: {
         id: '/',
-        name: '每日记录',
-        short_name: '每日记录',
-        description: '记录每日饮食和学习，追踪健康与成长',
+        name: '记账本',
+        short_name: '记账本',
+        description: '记录每日收支，规划美好生活',
         start_url: '/',
         scope: '/',
         theme_color: '#FF8C42',
