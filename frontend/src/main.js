@@ -1,8 +1,11 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { ElMessage } from 'element-plus'
 import './assets/styles/global.css'
 import App from './App.vue'
 import router from './router'
+
+ElMessage.config({ duration: 2000 })
 
 const app = createApp(App)
 
