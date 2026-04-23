@@ -1,6 +1,6 @@
 # 每日记录 - 消费收入网站
 
-一个全栈网站，用于记录每天的消费收入情况。
+一个全栈网站，用于记录每天的消费收入情况。taichouclaw.com
 
 ## 技术栈
 
@@ -111,21 +111,7 @@ npm run dev
 - POST `/api/auth/login` - 用户登录
 - GET `/api/auth/user` - 获取当前用户信息
 
-### 饮食记录接口
-- GET `/api/food/records` - 获取饮食记录列表
-- POST `/api/food/records` - 添加饮食记录
-- GET `/api/food/records/:id` - 获取单条饮食记录
-- PUT `/api/food/records/:id` - 更新饮食记录
-- DELETE `/api/food/records/:id` - 删除饮食记录
-- GET `/api/food/stats` - 获取饮食统计数据
-
-### 学习记录接口
-- GET `/api/study/records` - 获取学习记录列表
-- POST `/api/study/records` - 添加学习记录
-- GET `/api/study/records/:id` - 获取单条学习记录
-- PUT `/api/study/records/:id` - 更新学习记录
-- DELETE `/api/study/records/:id` - 删除学习记录
-- GET `/api/study/stats` - 获取学习统计数据
+其余类似
 
 ## 使用说明
 
